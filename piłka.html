@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styl.css">
+    <title>Gra Pong</title>
+    <script>
+        let pilkaX = 290, pilkaY = 190;
+        let kierunekX = 1, kierunekY = 1;
+        let pozYGracz1 = 150, pozYGracz2 = 150;
+        let wynik = [0, 0];
+        let interwal;
+
+        function poczatek() {
+            pilkaX = 290;
+            pilkaY = 190;
+            kierunekX = Math.random() < 0.5 ? 1 : -1;
+            kierunekY = Math.random() < 0.5 ? 1 : -1;
+            document.getElementById('wynik1').innerText = wynik[0];
+            document.getElementById('wynik2').innerText = wynik[1];
+        }
+
+        function startGra() {
+            document.getElementById('start').style.display = 'none';
+            poczatek();
+            interwal = setInterval(graj, 16);
+        }
+
+        function graj() {
+            pilkaX += 2 * kierunekX;
+            pilkaY += 2 * kierunekY;
+
+            if (pilkaY <= 0 || pilkaY >= 380) kierunekY *= -1;
+            if (pilkaX <= 10 && pilkaY >= pozYGracz1 && pilkaY <= pozYGracz1 + 100) kierunekX *= -1;
+            if (pilkaX >= 570 && pilkaY >= pozYGracz2 && pilkaY <= pozYGracz2 + 100) kierunekX *= -1;
+
+            if (pilkaX < 0) {
+                wynik[1]++;
+                poczatek();
+            } else if (pilkaX > 590) {
+                wynik[0]++;
+                poczatek();
+            }
+
+            document.getElementById('pilka').style.top = pilkaY + 'px';
+            document.getElementById('pilka').style.left = pilkaX + 'px';
+        }
+
+        function wcisnieto(klawisz) {
+            if (klawisz.key === 'w' && pozYGracz1 > 0) pozYGracz1 -= 15;
+            else if (klawisz.key === 's' && pozYGracz1 < 300) pozYGracz1 += 15;
+            if (klawisz.key === 'ArrowUp' && pozYGracz2 > 0) pozYGracz2 -= 15;
+            else if (klawisz.key === 'ArrowDown' && pozYGracz2 < 300) pozYGracz2 += 15;
+
+            document.getElementById('gracz').style.top = pozYGracz1 + 'px';
+            document.getElementById('gracz2').style.top = pozYGracz2 + 'px';
+        }
+    </script>
+</head>
+<body id="body" tabindex="0" onkeydown="wcisnieto(event)">
+    <div id="tytul">Gra Pong</div>
+    <div id="gra">
+        <div id="wynik1">0</div>
+        <div id="wynik2">0</div>
+        <div id="pilka"></div>
+        <div id="gracz"></div>
+        <div id="gracz2"></div>
+        <div id="start" onclick="startGra()">Kliknij, aby rozpocząć</div>
+    </div>
+</body>
+</html>
